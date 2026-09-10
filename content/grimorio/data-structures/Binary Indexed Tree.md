@@ -14,7 +14,9 @@ alias:
 - **Problema que resuelve:** Una situación común en la cual nos podemos encontrar es en querer operar sobre los elementos de un array, por ejemplo hacer una sumatoria sobre todos los elementos de un array de números. Lo cual es costoso en términos de rendimiento porque para cada vez que queramos calcularlo habría una complejidad algorítmica de O(n). Esta estructura de datos lo que propone es precargar los resultados de esa sumatoria en un árbol para poder acceder a los resultados de las sumatorias del array o de rangos en particular del mismo de manera optima, la complejidad con esta estructura crece en torno a O(log n).
 
 ### Definición / propiedades
-- Definición formal: Para cargar el árbol se trabaja con la representación en binario del numero de los índices de los elementos del array y consta de los siguientes pasos:
+- **Definición formal:** Esta estructura es un árbol como cualquier otro, que va a tener tantos nodos como elementos tenga el vector original. Cada valor de cada nodo representa una suma, esta suma es la suma de un cierto rango del vector original.
+- **Propiedades clave:**  Para entender primero la estructura hay que saber como funciona el algoritmo para cargar el árbol, se trabaja con la representación en binario del numero de los índices de los elementos del array y consta de los siguientes pasos:
+#### ¿Cómo determina cuantos nodos por nivel del arbol?
 
 > [!NOTE] Buscar los padres de cada nodo utilizando la funcion "Parent"
 > **Lowbit(i) = i & (−i)**
@@ -32,15 +34,36 @@ Parent(110<sub>2</sub>) =   110<sub>2</sub> - 110<sub>2</sub> & 010<sub>2</sub
 Parent(110<sub>2</sub>) =   110<sub>2</sub> - 010<sub>2</sub>
 Parent(110<sub>2</sub>) =   100<sub>2</sub>
 
-Y si lo vemos en forma decimal quedaría: Parent(6<sub>10</sub>) =   4<sub>10</sub> lo que indica que el nodo de índice 4 es el padre del nodo de índice 6 en el arbol. Si se replica esto con todos los índices del array se construye la estructura y te indica cuales nodos son hijos de cuales otros dando como resultado la estructura final del arbol.
+Y si lo vemos en forma decimal quedaría: Parent(6<sub>10</sub>) =   4<sub>10</sub> lo que indica que el nodo de índice 4 es el padre del nodo de índice 6 en el árbol. Si se replica esto con todos los índices del array se construye la estructura y te indica cuales nodos son hijos de cuales otros dando como resultado la estructura final del árbol.
 
-- Propiedades clave: orden, acotamiento, restricciones sobre elementos, estabilidad, etc.
+Todo este algoritmo tiene la función de organizar el árbol de forma tal que el valor de cada nodo sea el resultado de la suma de un cierto rango de elementos del vector
+
+#### ¿Cómo se eligen los valores para cada nodo del árbol?
+Para cada posición del vector se debe expresar como una suma de potencias de 2. Además en esta suma que se tiene  que descomponer debe haber minimo dos operandos. Por ejemplo para un vector de 6 elementos quedaría:
+
+| posición |  posición expresada como suma  |
+| :------: | :----------------------------: |
+|    1     |       0 + 2<sup>0</sup>        |
+|    2     |       0 + 2<sup>1</sup>        |
+|    3     | 2<sup>1</sup> + 2<sup>0</sup>  |
+|    4     |       0 + 2<sup>2</sup>        |
+|    5     | 2<sup>2</sup> + 2<sup>0</sup>  |
+|    6     | 2<sup>2</sup>  + 2<sup>1</sup> |
+Cada operando en esta suma que se descompuso representa los rangos de números que tengo que sumar, el primer operando es en la posición del vector que tengo que pararme y el otro operando es la cantidad de elementos que tengo que sumar.
+Por ejemplo para la posición 4 tengo que la suma es "0 + 2<sup>2</sup>" eso quiere decir que me tengo que parar en el índice 0 y sumar partiendo de ahi 4 elementos a la derecha, es decir suma el rango del vector (0,3).
+
+| posición |  posición expresada como suma  | índice de nodo del arbol | rango de suma del vector que contiene el nodo |
+| :------: | :----------------------------: | :----------------------: | :-------------------------------------------: |
+|    1     |       0 + 2<sup>0</sup>        |            1             |                     (0,0)                     |
+|    2     |       0 + 2<sup>1</sup>        |            2             |                     (0,1)                     |
+|    3     | 2<sup>1</sup> + 2<sup>0</sup>  |            3             |                     (2,2)                     |
+|    4     |       0 + 2<sup>2</sup>        |            4             |                     (0,3)                     |
+|    5     | 2<sup>2</sup> + 2<sup>0</sup>  |            5             |                     (4,4)                     |
+|    6     | 2<sup>2</sup>  + 2<sup>1</sup> |            6             |                     (4,5)                     |
 
 ### Representación
-- Descripción de la organización interna (arrays, nodos enlazados, árboles, tablas, etc.).
-- Ilustración sugerida: incluye aquí un diagrama ASCII o referencia a una imagen en `attachments/`.
-
-Debe responder a: "¿qué estoy mirando?"
+- Asumiendo que partimos del vector A={5, 4, 1, -1, 0, 8} de 6 posiciones, se aplica el algoritmo detallado anteriormente para cargar las sumas de rangos determinados del vector a cada nodo del árbol.
+![[esquema carga de arbol.svg]]
 
 ## 2. Operaciones y complejidad
 
