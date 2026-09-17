@@ -80,7 +80,7 @@ Ejemplo:
 
 Cada posición cubre un intervalo de distinto tamaño según `Lowbit(i)`, lo que permite reconstruir cualquier suma prefija combinando bloques que no se solapan.
 
-**Debe responder a:** "¿qué estoy mirando?"
+
 
 ## 2. Operaciones y complejidad
 
@@ -104,7 +104,7 @@ Cada posición cubre un intervalo de distinto tamaño según `Lowbit(i)`, lo que
 ### Detalles operativos
 La posición `0` no representa un elemento: actúa como corte de los recorridos (`prefixSum` termina cuando `i` llega a `0`; `add`, cuando supera `n`). Estos costos suponen que la operación es una **suma** con actualizaciones **puntuales**; otras operaciones o actualizaciones de rango requieren variantes.
 
-**Debe responder a:** "¿qué puedo hacer y cuánto cuesta?"
+
 
 ## 3. Implementación
 
@@ -155,7 +155,7 @@ bit.range_sum(2, 5) # 4 = 4 + 1 - 1 + 0
 bit.add(3, 2) # actualiza solo las posiciones necesarias
 ```
 
-**Debe responder a:** "¿cómo lo programo sin romperlo?"
+
 
 ## 4. Uso y criterio
 
@@ -190,7 +190,7 @@ Arreglos que cambian con frecuencia y sobre los que se consultan sumas acumulada
 ### Señales de reconocimiento
 > "Tengo un arreglo, los valores cambian y necesito consultar repetidamente sumas de posiciones o rangos."
 
-**Debe responder a:** "¿cuándo conviene usarlo?"
+
 
 ## 5. Relaciones y extensiones
 
@@ -204,7 +204,7 @@ Además, BIT, se relaciona con el **[[dynamic array]]**: este permite modificar 
 ### Notas avanzadas
 La idea sirve para cualquier operación que combine correctamente sus valores, pero reconstruir `consulta(l, r) = prefijo(r) - prefijo(l-1)` exige una operación **inversa**, por lo que la suma es el caso natural. Con **compresión de coordenadas** puede trabajar sobre valores muy grandes usando un arreglo reducido.
 
-**Debe responder a:** "¿cómo encaja en el mapa general de estructuras de datos?"
+
 
 ## 6. Referencias y recursos
 
