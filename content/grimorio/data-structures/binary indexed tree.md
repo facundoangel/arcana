@@ -11,7 +11,7 @@ alias:
 
 ### Intuición
 - **Idea central:** Un Binary Indexed Tree (Árbol Indexado, Fenwick Tree o BIT) es una estructura basada en un arreglo que resuelve eficientemente sumas prefijas mientras admite actualizaciones puntuales. En lugar de guardar solo los valores originales, almacena sumas parciales de intervalos definidos por la representación binaria de los índices, de modo que una consulta se resuelve combinando pocos bloques.
-- **Problema que resuelve:** Consultar repetidamente la suma `A[1] + ... + A[i]`. Con un arreglo común la consulta cuesta `O(n)`, y un arreglo de sumas prefijas la hace `O(1)` pero vuelve costosa cada modificación. El Fenwick Tree equilibra ambos casos: actualización y consulta en `O(log n)`.
+- **Problema que resuelve:** Consultar repetidamente la suma `A[1] + ... + A[i]`. Con un arreglo común la consulta cuesta $O(n)$, y un arreglo de sumas prefijas la hace $O(1)$ pero vuelve costosa cada modificación. El Fenwick Tree equilibra ambos casos: actualización y consulta en $O(\log n)$.
 
 ### Definición / propiedades
 - **Definición formal:** Usa un arreglo de tamaño `n + 1` con índices desde `1`. Cada posición `i` almacena la suma de los `Lowbit(i)` elementos que terminan en `i`. El árbol es **implícito**: no hay nodos ni punteros, solo relaciones calculadas sobre los índices.
@@ -94,12 +94,12 @@ Cada posición cubre un intervalo de distinto tamaño según `Lowbit(i)`, lo que
 
 | Operación | Tiempo | Espacio |
 | :--- | :---: | :---: |
-| `add` / `prefixSum` / `rangeSum` / `get` | `O(log n)` | `O(1)` |
-| Construcción con `add` | `O(n log n)` | `O(n)` |
-| Construcción optimizada | `O(n)` | `O(n)` |
-| Estructura | — | `O(n)` |
+| `add` / `prefixSum` / `rangeSum` / `get` | $O(\log n)$ | $O(1)$ |
+| Construcción con `add` | $O(n \log n)$ | $O(n)$ |
+| Construcción optimizada | $O(n)$ | $O(n)$ |
+| Estructura | — | $O(n)$ |
 
-`add` y `prefixSum` son `O(log n)` porque en cada paso el índice cambia según `Lowbit(i)`, recorriendo tantas posiciones como bits tiene `i`. `rangeSum` hace dos `prefixSum`, por lo que sigue siendo `O(log n)`.
+`add` y `prefixSum` son $O(\log n)$ porque en cada paso el índice cambia según `Lowbit(i)`, recorriendo tantas posiciones como bits tiene `i`. `rangeSum` hace dos `prefixSum`, por lo que sigue siendo $O(\log n)$.
 
 ### Detalles operativos
 La posición `0` no representa un elemento: actúa como corte de los recorridos (`prefixSum` termina cuando `i` llega a `0`; `add`, cuando supera `n`). Estos costos suponen que la operación es una **suma** con actualizaciones **puntuales**; otras operaciones o actualizaciones de rango requieren variantes.
@@ -109,7 +109,7 @@ La posición `0` no representa un elemento: actúa como corte de los recorridos 
 ## 3. Implementación
 
 ### Idea de implementación
-Se usa un arreglo `tree` de tamaño `n + 1`. La operación base es `i & -i`. Para actualizar se sube con `i += i & -i` hasta pasar `n`; para consultar se baja con `i -= i & -i` hasta `0`. Ambas recorren `O(log n)` posiciones.
+Se usa un arreglo `tree` de tamaño `n + 1`. La operación base es `i & -i`. Para actualizar se sube con `i += i & -i` hasta pasar `n`; para consultar se baja con `i -= i & -i` hasta `0`. Ambas recorren $O(\log n)$ posiciones.
 
 ### Invariantes
 - La posición `0` es solo condición de corte, no un elemento.
@@ -163,7 +163,7 @@ bit.add(3, 2) # actualiza solo las posiciones necesarias
 Arreglos que cambian con frecuencia y sobre los que se consultan sumas acumuladas o de rango: sumas prefijas dinámicas, sumas de rango, actualizaciones puntuales que mantienen las consultas vigentes, y problemas con muchas operaciones mixtas sobre el mismo arreglo.
 
 ### Cuándo NO usarlo
-- Si el arreglo casi no cambia: un arreglo de sumas prefijas consulta en `O(1)`.
+- Si el arreglo casi no cambia: un arreglo de sumas prefijas consulta en $O(1)$.
 - Si se necesitan mínimos/máximos de rango u operaciones sin inversa.
 - Si hay actualizaciones de rango complejas: suele convenir un Segment Tree.
 - Si solo hace falta acceso directo al valor: alcanza el arreglo original.
@@ -172,18 +172,18 @@ Arreglos que cambian con frecuencia y sobre los que se consultan sumas acumulada
 
 | Estructura     | Consulta rango | Actualización | Memoria | Rasgo              |
 | -------------- | :------------: | :-----------: | :-----: | ------------------ |
-| Arreglo común  |     `O(n)`     |    `O(1)`     | `O(n)`  | Acceso directo     |
-| Sumas prefijas |     `O(1)`     |    `O(n)`     | `O(n)`  | Ideal si no cambia |
-| Árbol Indexado |   `O(log n)`   |  `O(log n)`   | `O(n)`  | Equilibrio         |
-| Segment Tree   |   `O(log n)`   |  `O(log n)`   |  `~4n`  | Más flexible       |
+| Arreglo común  |     $O(n)$     |    $O(1)$     | $O(n)$  | Acceso directo     |
+| Sumas prefijas |     $O(1)$     |    $O(n)$     | $O(n)$  | Ideal si no cambia |
+| Árbol Indexado |   $O(\log n)$   |  $O(\log n)$   | $O(n)$  | Equilibrio         |
+| Segment Tree   |   $O(\log n)$   |  $O(\log n)$   |  `~4n`  | Más flexible       |
 
 ### Ventajas / desventajas
 
 | Ventajas | Desventajas |
 | :--- | :--- |
-| `O(log n)` para consultas y actualizaciones puntuales. | Menos flexible que un Segment Tree. |
+| $O(\log n)$ para consultas y actualizaciones puntuales. | Menos flexible que un Segment Tree. |
 | Implementación pequeña y sencilla. | La indexación por bits es poco intuitiva al inicio. |
-| Utiliza `O(n)` de espacio. | Orientado principalmente a operaciones acumulativas. |
+| Utiliza $O(n)$ de espacio. | Orientado principalmente a operaciones acumulativas. |
 | No necesita nodos, punteros ni referencias. | Las actualizaciones de rango requieren variantes. |
 | Buena localidad de memoria al usar un arreglo. | Poco conveniente si hay que recorrer o buscar elementos individualmente. |
 
@@ -195,7 +195,7 @@ Arreglos que cambian con frecuencia y sobre los que se consultan sumas acumulada
 ## 5. Relaciones y extensiones
 
 ### Variantes
-Actualización de rango mediante diferencias; combinación de **dos Fenwick Trees** para actualizar y consultar rangos en `O(log n)`; y el **Fenwick Tree 2D**, que aplica la misma idea sobre una matriz con índices de fila y columna.
+Actualización de rango mediante diferencias; combinación de **dos Fenwick Trees** para actualizar y consultar rangos en $O(\log n)$; y el **Fenwick Tree 2D**, que aplica la misma idea sobre una matriz con índices de fila y columna.
 
 ### Relación con otras estructuras
 Se apoya en el **[[array]]** y su acceso directo, pero cada posición resume un intervalo. Es una alternativa dinámica a las **sumas prefijas** (equilibra consulta y actualización) frente al **Segment Tree**, que representa los intervalos de forma explícita y jerárquica, el Fenwick Tree usa una representación implícita basada en los bits del índice.
