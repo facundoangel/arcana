@@ -77,7 +77,8 @@ Ejemplo:
                          ▼
                        [5──6]
 ```
-
+#### Árbol Binario Resultante
+![Fenwick Tree](/attachments/grimorio/data-structures/binary-indexed-tree.svg)
 Cada posición cubre un intervalo de distinto tamaño según `Lowbit(i)`, lo que permite reconstruir cualquier suma prefija combinando bloques que no se solapan.
 
 
